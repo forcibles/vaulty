@@ -1,0 +1,425 @@
+{
+  "generatedAt": "2026-02-12T13:03:59.005Z",
+  "source": "github-actions",
+  "cadenceMinutes": 60,
+  "snapshot": {
+    "fetchedAt": "2026-02-12T13:03:59.005Z",
+    "durationMs": 45,
+    "tools": [
+      {
+        "slug": "kernaim-apex",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.987Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "redeye-external-apex",
+        "status": "Testing (Working)",
+        "statusTone": "testing",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.987Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "eden-dma-arc-raiders",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.988Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ghost-arc-raiders",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.988Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "kernaim-ar",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.989Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "nocturnal-arc-raiders",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.989Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ez-abi-dma",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.990Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "inferno-abi",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.990Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "blurred-dma-bf6",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.991Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "fecurity-bf",
+        "status": "Testing (Working)",
+        "statusTone": "testing",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.992Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "blurred-cod-dma",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.992Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "bot-lobby",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.993Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "fecurity-external-cod-bo7-6-mw2-3",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.993Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "noah-bo7-bo6",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.993Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "nocturnal-bo7",
+        "status": "Updating (Not Working)",
+        "statusTone": "updating",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.994Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "permanent-uav-bo7",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.994Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "memesense",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.994Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "midnight",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.995Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "predator-cs2",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.995Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "eft-full",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.995Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "eft-lite",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.996Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "kernaim-eft",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.997Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "redengine-lua-executor",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.997Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "redengine-spoofer",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.997Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "tz-internal",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.998Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "tzx-external",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.998Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "arcane-fn",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.999Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "blurred-fortnite-dma",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.999Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "disconnect-external-fortnite",
+        "status": "Testing (Working)",
+        "statusTone": "testing",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:58.999Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "exception",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.000Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "permanent-spoofer",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.000Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ssz-spoofer",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.000Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "arcane-pubg",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.001Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ring-1-full-pubg-intel-cpu-only",
+        "status": "Updating (Not Working)",
+        "statusTone": "updating",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.001Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "bun-r6-siege-x-dma",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.001Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "caruso-r6-dma",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.002Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "frost-r6",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.002Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ghost-r6",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.002Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "inferno-r6",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.003Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "lethal-full",
+        "status": "Updating (Not Working)",
+        "statusTone": "updating",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.003Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "lethal-lite",
+        "status": "Updating (Not Working)",
+        "statusTone": "updating",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.003Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ring-1-r6",
+        "status": "Updating (Not Working)",
+        "statusTone": "updating",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.004Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "dx9ware",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.004Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "wave",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "blurred-dma-rust",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "disconnect-external",
+        "status": "Testing (Working)",
+        "statusTone": "testing",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "fluent-full",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "recoilclub-script",
+        "status": "Testing (Working Risky)",
+        "statusTone": "testing",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "ssz-external",
+        "status": "Testing (Working Risky)",
+        "statusTone": "testing",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "moonshine-valorant",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      },
+      {
+        "slug": "sensory-valorant-dma",
+        "status": "Undetected (working)",
+        "statusTone": "undetected",
+        "source": "fallback",
+        "checkedAt": "2026-02-12T13:03:59.005Z",
+        "error": "fetch failed"
+      }
+    ],
+    "summary": {
+      "total": 51,
+      "undetected": 40,
+      "updating": 11,
+      "fallback": 51
+    }
+  }
+}

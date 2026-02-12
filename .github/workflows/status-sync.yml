@@ -1,0 +1,40 @@
+name: Sync Live Status
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync live status snapshot
+        run: npm run sync:status
+
+      - name: Commit updated status snapshot
+        run: |
+          if [[ -n "$(git status --porcelain public/data/live-status.json)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add public/data/live-status.json
+            git commit -m "chore(status): hourly sync live status snapshot"
+            git push
+          else
+            echo "No status changes to commit."
+          fi
