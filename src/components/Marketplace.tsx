@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import GameCard from "@/components/GameCard";
-import { CircleCheckBig, Flame, Timer } from "lucide-react";
+import { ArrowUpDown, CircleCheckBig, Flame, Timer, TrendingUp } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { TOOL_CATALOG, TOOL_CATEGORIES } from "@/data/toolCatalog";
+import { readPurchaseCounts } from "@/lib/purchaseStats";
 
 type Category = (typeof TOOL_CATEGORIES)[number];
+type SortOption = "featured" | "price-asc" | "price-desc" | "top-purchased" | "name-asc";
 
 const isCategory = (value: string): value is Category =>
   TOOL_CATEGORIES.includes(value as Category);
@@ -16,6 +18,20 @@ type MarketplaceProps = {
 const Marketplace = ({ compactTop = false }: MarketplaceProps) => {
   const location = useLocation();
   const [activeCategory, setActiveCategory] = useState<Category>("All");
+  const [activeSort, setActiveSort] = useState<SortOption>("featured");
+  const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const syncPurchaseCounts = () => setPurchaseCounts(readPurchaseCounts());
+    syncPurchaseCounts();
+
+    window.addEventListener("purchase-stats:updated", syncPurchaseCounts as EventListener);
+    window.addEventListener("storage", syncPurchaseCounts);
+    return () => {
+      window.removeEventListener("purchase-stats:updated", syncPurchaseCounts as EventListener);
+      window.removeEventListener("storage", syncPurchaseCounts);
+    };
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -49,6 +65,71 @@ const Marketplace = ({ compactTop = false }: MarketplaceProps) => {
     [activeCategory],
   );
 
+  const sortedCatalog = useMemo(() => {
+    const statusSortRank = { undetected: 0, testing: 1, updating: 2 } as const;
+    const demandByCategory: Record<string, number> = {
+      "Call of Duty": 18,
+      Fortnite: 14,
+      "Apex Legends": 12,
+      "Arc Raiders": 10,
+      Valorant: 10,
+      Rust: 9,
+      PUBG: 8,
+      "Counter-Strike 2": 8,
+      "Escape From Tarkov": 8,
+      "Rainbow Six Siege X": 7,
+      FiveM: 7,
+      Battlefield: 6,
+      Roblox: 6,
+      "Arena Breakout": 5,
+      "HWID Spoofers": 4,
+      "DMA Kits": 3,
+    };
+
+    const fallbackDemandScore = (category: string, startingPrice: number, statusTone: "undetected" | "testing" | "updating") => {
+      const categoryDemand = demandByCategory[category] || 5;
+      const statusDemand = statusTone === "undetected" ? 10 : statusTone === "testing" ? 4 : 1;
+      const priceDemand = Math.max(0, Math.round(18 - startingPrice / 3.5));
+      return categoryDemand + statusDemand + priceDemand;
+    };
+
+    const topPurchasedScore = (slug: string, category: string, startingPrice: number, statusTone: "undetected" | "testing" | "updating") => {
+      const localPurchases = purchaseCounts[slug] || 0;
+      return localPurchases * 1000 + fallbackDemandScore(category, startingPrice, statusTone);
+    };
+
+    const list = [...filteredCatalog];
+    list.sort((a, b) => {
+      if (activeSort === "price-asc") {
+        return a.startingPrice - b.startingPrice || a.title.localeCompare(b.title);
+      }
+      if (activeSort === "price-desc") {
+        return b.startingPrice - a.startingPrice || a.title.localeCompare(b.title);
+      }
+      if (activeSort === "name-asc") {
+        return a.title.localeCompare(b.title);
+      }
+      if (activeSort === "top-purchased") {
+        return (
+          topPurchasedScore(b.slug, b.category, b.startingPrice, b.statusTone) -
+            topPurchasedScore(a.slug, a.category, a.startingPrice, a.statusTone) ||
+          statusSortRank[a.statusTone] - statusSortRank[b.statusTone] ||
+          a.title.localeCompare(b.title)
+        );
+      }
+
+      return (
+        statusSortRank[a.statusTone] - statusSortRank[b.statusTone] ||
+        topPurchasedScore(b.slug, b.category, b.startingPrice, b.statusTone) -
+          topPurchasedScore(a.slug, a.category, a.startingPrice, a.statusTone) ||
+        a.startingPrice - b.startingPrice ||
+        a.title.localeCompare(b.title)
+      );
+    });
+
+    return list;
+  }, [activeSort, filteredCatalog, purchaseCounts]);
+
   return (
     <section
       id="marketplace"
@@ -67,19 +148,44 @@ const Marketplace = ({ compactTop = false }: MarketplaceProps) => {
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
             Imported catalog snapshot with {TOOL_CATALOG.length} tools across {TOOL_CATEGORIES.length - 1} categories.
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-green-500/30 bg-green-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-green-400">
-              <CircleCheckBig className="h-3.5 w-3.5" />
-              Undetected (Working)
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
-              <Timer className="h-3.5 w-3.5" />
-              Instant Delivery
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
-              <Flame className="h-3.5 w-3.5" />
-              Fast Patch Lane
-            </span>
+          <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-green-500/30 bg-green-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-green-400">
+                <CircleCheckBig className="h-3.5 w-3.5" />
+                Undetected (Working)
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
+                <Timer className="h-3.5 w-3.5" />
+                Instant Delivery
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
+                <Flame className="h-3.5 w-3.5" />
+                Fast Patch Lane
+              </span>
+            </div>
+
+            <div className="flex items-center justify-start gap-2 lg:justify-end">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/60">
+                <ArrowUpDown className="h-3.5 w-3.5" />
+                Sort
+              </span>
+              <select
+                aria-label="Sort tools"
+                value={activeSort}
+                onChange={(event) => setActiveSort(event.target.value as SortOption)}
+                className="min-w-[190px] rounded-lg border border-white/15 bg-black/45 px-3 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white/90 transition hover:border-sky-300/45 focus:border-sky-300/60 focus:outline-none"
+              >
+                <option value="featured">Featured</option>
+                <option value="top-purchased">Top Purchased</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name-asc">Name: A-Z</option>
+              </select>
+              <span className="inline-flex items-center gap-1 rounded-full border border-sky-300/30 bg-sky-300/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-sky-200/95">
+                <TrendingUp className="h-3 w-3" />
+                Live
+              </span>
+            </div>
           </div>
         </div>
 
@@ -148,7 +254,7 @@ const Marketplace = ({ compactTop = false }: MarketplaceProps) => {
 
           <div className="md:col-span-9">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredCatalog.map((game) => (
+              {sortedCatalog.map((game) => (
                 <GameCard
                   key={game.slug}
                   slug={game.slug}

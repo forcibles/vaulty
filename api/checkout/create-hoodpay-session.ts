@@ -28,7 +28,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Create order in our system
     const order = createOrder(items, customer, 'crypto');
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:8081';
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+      'http://localhost:8080';
     const successUrl = `${siteUrl}/checkout/success?orderId=${order.id}`;
 
     if (!NOWPAYMENTS_API_KEY) {
@@ -48,7 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           price_currency: 'usd',
           order_id: order.id,
           order_description: `Order ${order.id} - ${items.length} item(s)`,
-          ipn_callback_url: `${siteUrl}/api/webhooks/nowpayments`,
+          ipn_callback_url: `${siteUrl}/api/webhooks/hoodpay`,
           success_url: successUrl,
           cancel_url: `${siteUrl}/checkout?canceled=true`,
         }),

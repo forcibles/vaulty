@@ -7,6 +7,7 @@ import VideoBackground from '@/components/VideoBackground';
 import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Loader2, XCircle, ShoppingBag } from 'lucide-react';
+import { incrementPurchaseCounts } from '@/lib/purchaseStats';
 
 type OrderStatus = 'paid' | 'pending' | 'failed' | 'not_found';
 
@@ -36,6 +37,7 @@ const CheckoutSuccess = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [pollCount, setPollCount] = useState(0);
   const [hasCleared, setHasCleared] = useState(false);
+  const [hasRecordedPurchase, setHasRecordedPurchase] = useState(false);
 
   const maxPollAttempts = 20; // 60 seconds total (3 seconds * 20)
 
@@ -64,6 +66,10 @@ const CheckoutSuccess = () => {
             clearCart();
             setHasCleared(true);
           }
+          if (!hasRecordedPurchase) {
+            incrementPurchaseCounts(data.order.items);
+            setHasRecordedPurchase(true);
+          }
         } else if (data.order.paymentStatus === 'failed') {
           setStatus('failed');
         } else {
@@ -89,7 +95,7 @@ const CheckoutSuccess = () => {
     }, 3000);
 
     return () => clearInterval(pollInterval);
-  }, [orderId, status, pollCount, clearCart, hasCleared]);
+  }, [orderId, status, pollCount, clearCart, hasCleared, hasRecordedPurchase]);
 
   return (
     <>

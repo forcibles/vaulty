@@ -1,3 +1,5 @@
+import { buildPricingMeta, type ToolMonetizationModel, type ToolPricingBand, type ToolPricingMeta } from "./pricingFramework";
+
 export type ToolStatusTone = "undetected" | "testing" | "updating";
 
 export type ToolCatalogItem = {
@@ -6,9 +8,22 @@ export type ToolCatalogItem = {
   category: string;
   description: string;
   startingPrice: number;
+  supplierStartingPrice: number;
+  pricingBand: ToolPricingBand;
+  monetizationModel: ToolMonetizationModel;
+  pricing: ToolPricingMeta;
   status: string;
   statusTone: ToolStatusTone;
   sourceUrl: string;
+};
+
+type ToolCatalogSeedItem = Omit<
+  ToolCatalogItem,
+  "startingPrice" | "supplierStartingPrice" | "pricingBand" | "monetizationModel" | "pricing"
+> & {
+  startingPrice: number;
+  pricingBand?: ToolPricingBand;
+  monetizationModel?: ToolMonetizationModel;
 };
 
 export const TOOL_CATEGORIES = [
@@ -19,6 +34,7 @@ export const TOOL_CATEGORIES = [
   "Battlefield",
   "Call of Duty",
   "Counter-Strike 2",
+  "DMA Kits",
   "Escape From Tarkov",
   "FiveM",
   "Fortnite",
@@ -30,7 +46,7 @@ export const TOOL_CATEGORIES = [
   "Valorant",
 ] as const;
 
-export const TOOL_CATALOG: ToolCatalogItem[] = [
+const TOOL_CATALOG_SEED: ToolCatalogSeedItem[] = [
   {
     "slug": "kernaim-apex",
     "title": "Kernaim (Apex)",
@@ -220,6 +236,206 @@ export const TOOL_CATALOG: ToolCatalogItem[] = [
     "status": "Undetected (working)",
     "statusTone": "undetected",
     "sourceUrl": "https://ssz.gg/cheats/product/592-predator-cs2/"
+  },
+  {
+    "slug": "1-1-emulated-fw-ace-be-cod",
+    "title": "1:1 Emulated FW - ACE /BE/COD",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 125,
+    "status": "Undetected (working)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/601-11-emulated-fw-ace-becod/"
+  },
+  {
+    "slug": "1-1-emulated-fw-be-eac-cod-ace",
+    "title": "1:1 Emulated FW - BE/EAC/COD/ACE",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 199,
+    "status": "Undetected (working)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/181-11-emulated-fw-beeaccodace/"
+  },
+  {
+    "slug": "1-1-emulated-fw-valorant-be-eac-ace",
+    "title": "1:1 Emulated FW - Valorant/BE/EAC/ACE",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 349,
+    "status": "Undetected (working)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/182-11-emulated-fw-valorantbeeacace/"
+  },
+  {
+    "slug": "1-1-emulated-fw-valorant-be-eac-ace-662",
+    "title": "1:1 Emulated FW - Valorant/BE/EAC/ACE",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 279.99,
+    "status": "Undetected (working)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/662-11-emulated-fw-valorantbeeacace/"
+  },
+  {
+    "slug": "1-1-slotted-emulated-fw-be-eac-cod-ace",
+    "title": "1:1 Slotted Emulated FW - BE/EAC/COD/ACE",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 299.99,
+    "status": "Undetected (working)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/556-11-slotted-emulated-fw-beeaccodace/"
+  },
+  {
+    "slug": "1-1-subscription-fw-be-eac-cod-ace",
+    "title": "1:1 Subscription FW - BE/EAC/COD/ACE",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 119.99,
+    "status": "Undetected (working)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/650-11-subscription-fw-beeaccodace/"
+  },
+  {
+    "slug": "captain-dma-100t",
+    "title": "Captain DMA: 100T",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 209.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/388-captain-dma-100t/"
+  },
+  {
+    "slug": "captain-dma-75t",
+    "title": "Captain DMA: 75T",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 149.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/356-captain-dma-75t/"
+  },
+  {
+    "slug": "captain-dma-pcie-expansion-platform",
+    "title": "Captain DMA: PCIE expansion platform",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 119.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/536-captain-dma-pcie-expansion-platform/"
+  },
+  {
+    "slug": "captaindma-4-1th-gen",
+    "title": "CaptainDMA – 4.1th Gen",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 119.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/350-captaindma-%E2%80%93-41th-gen/"
+  },
+  {
+    "slug": "captaindma-4th-gen",
+    "title": "CaptainDMA – 4th Gen",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 119.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/351-captaindma-%E2%80%93-4th-gen/"
+  },
+  {
+    "slug": "captaindma-5-1th-gen",
+    "title": "CaptainDMA – 5.1th Gen",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 199.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/353-captaindma-%E2%80%93-51th-gen/"
+  },
+  {
+    "slug": "captaindma-fuser-dp-hdmi-v2",
+    "title": "CaptainDMA – Fuser DP/HDMI V2",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 248.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/352-captaindma-%E2%80%93-fuser-dphdmi-v2/"
+  },
+  {
+    "slug": "captaindma-m-2-100t-card",
+    "title": "CaptainDMA – M.2 100T Card",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 258.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/663-captaindma-%E2%80%93-m2-100t-card/"
+  },
+  {
+    "slug": "captaindma-m-2-35t-card",
+    "title": "CaptainDMA – M.2 35T Card",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 169.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/354-captaindma-%E2%80%93-m2-35t-card/"
+  },
+  {
+    "slug": "ssz-dma-kmbox-net",
+    "title": "SSZ DMA: KMBox net",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 49.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/179-ssz-dma-kmbox-net/"
+  },
+  {
+    "slug": "ssz-dma-makcu-box",
+    "title": "SSZ DMA: MAKCU box",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 24.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/424-ssz-dma-makcu-box/"
+  },
+  {
+    "slug": "ssz-dma-pro-bundle",
+    "title": "SSZ DMA: Pro Bundle",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 449.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/176-ssz-dma-pro-bundle/"
+  },
+  {
+    "slug": "ssz-dma-starter-bundle",
+    "title": "SSZ DMA: Starter Bundle",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 379.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/392-ssz-dma-starter-bundle/"
+  },
+  {
+    "slug": "ssz-dma-ultimate-bundle",
+    "title": "SSZ DMA: Ultimate Bundle",
+    "category": "DMA Kits",
+    "description": "CheatVault-tested DMA hardware and firmware kit with stable setup defaults for external workflows.",
+    "startingPrice": 539.99,
+    "status": "In Stock (Hardware)",
+    "statusTone": "undetected",
+    "sourceUrl": "https://ssz.gg/cheats/product/177-ssz-dma-ultimate-bundle/"
   },
   {
     "slug": "eft-full",
@@ -542,6 +758,24 @@ export const TOOL_CATALOG: ToolCatalogItem[] = [
     "sourceUrl": "https://ssz.gg/cheats/product/373-sensory-valorant-dma/"
   }
 ];
+
+export const TOOL_CATALOG: ToolCatalogItem[] = TOOL_CATALOG_SEED.map((tool) => {
+  const pricing = buildPricingMeta({
+    category: tool.category,
+    startingPrice: tool.startingPrice,
+    pricingBand: tool.pricingBand,
+    monetizationModel: tool.monetizationModel,
+  });
+
+  return {
+    ...tool,
+    supplierStartingPrice: pricing.supplierStartingPrice,
+    startingPrice: pricing.retailStartingPrice,
+    pricingBand: pricing.pricingBand,
+    monetizationModel: pricing.monetizationModel,
+    pricing,
+  };
+});
 
 export const TOOL_CATALOG_MAP: Record<string, ToolCatalogItem> = Object.fromEntries(
   TOOL_CATALOG.map((tool) => [tool.slug, tool]),

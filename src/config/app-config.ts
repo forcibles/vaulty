@@ -62,8 +62,18 @@ export const validateConfig = () => {
   }
   
   if (errors.length > 0) {
-    console.error('Configuration validation errors:', errors);
-    throw new Error(`Invalid configuration: ${errors.join(', ')}`);
+    // This app can still render without optional integrations configured.
+    // Keep the error visible in the console, but don't crash production builds
+    // unless explicitly requested.
+    console.warn('Configuration validation warnings:', errors);
+
+    const strict =
+      (import.meta.env.VITE_STRICT_CONFIG || '').toLowerCase() === 'true' ||
+      (import.meta.env.VITE_STRICT_CONFIG || '').toLowerCase() === '1';
+
+    if (strict) {
+      throw new Error(`Invalid configuration: ${errors.join(', ')}`);
+    }
   }
   
   return errors.length === 0;

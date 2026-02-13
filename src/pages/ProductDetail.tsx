@@ -56,12 +56,18 @@ const REQUIREMENTS_BY_CATEGORY: Record<string, RequirementInfo> = {
 
 const roundCurrency = (value: number) => Number(value.toFixed(2));
 
-const buildSubscriptions = (basePrice: number): Subscription[] => [
-  { id: "1day", duration: "1 Day", price: roundCurrency(basePrice), stock: 20 },
-  { id: "1week", duration: "1 Week", price: roundCurrency(basePrice * 3.2), stock: 14 },
-  { id: "1month", duration: "1 Month", price: roundCurrency(basePrice * 6.8), stock: 9 },
-  { id: "lifetime", duration: "Lifetime", price: roundCurrency(basePrice * 18), stock: 3 },
-];
+const buildSubscriptions = (startingPrice: number, monetizationModel: "subscription" | "one-time"): Subscription[] => {
+  if (monetizationModel === "one-time") {
+    return [{ id: "one-time", duration: "One-Time Purchase", price: roundCurrency(startingPrice), stock: 20 }];
+  }
+
+  return [
+    { id: "1day", duration: "1 Day", price: roundCurrency(startingPrice), stock: 20 },
+    { id: "1week", duration: "1 Week", price: roundCurrency(startingPrice * 3.2), stock: 14 },
+    { id: "1month", duration: "1 Month", price: roundCurrency(startingPrice * 6.8), stock: 9 },
+    { id: "lifetime", duration: "Lifetime", price: roundCurrency(startingPrice * 18), stock: 3 },
+  ];
+};
 
 const defaultFeatureBlocks: FeatureBlock[] = [
   {
@@ -165,7 +171,7 @@ const ProductDetail = () => {
   const tool = productId ? TOOL_CATALOG_MAP[productId] : null;
 
   const subscriptions = useMemo(
-    () => (tool ? buildSubscriptions(tool.startingPrice) : []),
+    () => (tool ? buildSubscriptions(tool.startingPrice, tool.monetizationModel) : []),
     [tool],
   );
 
@@ -206,6 +212,7 @@ const ProductDetail = () => {
 
   const selectedSub = subscriptions.find((sub) => sub.id === selectedSubscription) || subscriptions[0];
   const maxStock = selectedSub?.stock || 0;
+  const oneTimePurchase = tool.monetizationModel === "one-time";
   const features = buildFeatures(tool.category, tool.title);
   const requirements = REQUIREMENTS_BY_CATEGORY[tool.category] || {
     cpu: "Intel / AMD",
@@ -260,14 +267,20 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (!selectedSub) return;
 
+    const cartName = oneTimePurchase ? tool.title : `${tool.title} - ${selectedSub.duration}`;
+
     addToCart({
       productId: `${tool.slug}-${selectedSubscription}`,
-      name: `${tool.title} - ${selectedSub.duration}`,
+      name: cartName,
       price: selectedSub.price,
       quantity,
     });
 
-    toast.success(`Added ${quantity}x ${tool.title} (${selectedSub.duration}) to cart!`);
+    toast.success(
+      oneTimePurchase
+        ? `Added ${quantity}x ${tool.title} to cart!`
+        : `Added ${quantity}x ${tool.title} (${selectedSub.duration}) to cart!`,
+    );
 
     window.setTimeout(() => {
       navigate("/checkout");
@@ -344,7 +357,9 @@ const ProductDetail = () => {
             <div className="grid gap-8 lg:grid-cols-3">
               <div className="lg:col-span-1">
                 <div className="page-panel sticky top-24 p-6">
-                  <h2 className="mb-4 font-heading text-xl font-bold text-gradient-silver">Choose Subscription</h2>
+                  <h2 className="mb-4 font-heading text-xl font-bold text-gradient-silver">
+                    {oneTimePurchase ? "Purchase Option" : "Choose Subscription"}
+                  </h2>
 
                   <div className="mb-6 flex items-center justify-between rounded-lg border border-white/12 bg-black/35 px-4 py-3">
                     <span className="text-sm font-semibold text-white/88">Quantity</span>
@@ -384,7 +399,9 @@ const ProductDetail = () => {
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="font-semibold text-foreground">{sub.duration}</div>
-                            <div className="text-xs text-white/58">In Stock ({sub.stock})</div>
+                            <div className="text-xs text-white/58">
+                              {oneTimePurchase ? "One-time payment" : `In Stock (${sub.stock})`}
+                            </div>
                           </div>
                           <div className="text-right">
                             <div className="text-xl font-bold text-gradient-gold">${sub.price.toFixed(2)}</div>

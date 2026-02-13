@@ -29,7 +29,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Create order in our system
     const order = createOrder(items, customer, 'card');
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:8080';
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+      'http://localhost:8080';
 
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
