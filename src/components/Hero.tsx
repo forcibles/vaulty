@@ -95,6 +95,8 @@ const cardTransforms = [
   { rotate: 5, x: -35, scale: 0.93, z: 1 },
 ];
 
+type HeroGameCard = (typeof games)[number];
+
 const Hero = () => {
   const navigate = useNavigate();
 
@@ -110,8 +112,61 @@ const Hero = () => {
     }, 40);
   };
 
+  const renderCardBody = (game: HeroGameCard, isCenter: boolean) => (
+    <div
+      className={`gloss-card hero-feature-card relative ${isCenter ? "shadow-[0_8px_60px_-12px_rgba(88,168,255,0.3)]" : "opacity-80"}`}
+      style={
+        {
+          width: "clamp(210px, 22vw, 260px)",
+          padding: "clamp(18px, 2vw, 28px)",
+          "--card-accent": game.accent,
+        } as CSSProperties
+      }
+    >
+      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.16] to-transparent" />
+      <div className="hero-card-diamond hero-card-diamond-left" />
+      <div className="hero-card-diamond hero-card-diamond-right" />
+
+      <div className="mb-4 flex items-center gap-2">
+        <span className={`h-1.5 w-1.5 rounded-full ${statusColors[game.status].dot}`} />
+        <span className={`text-[9px] uppercase tracking-[0.18em] font-semibold ${statusColors[game.status].text}`}>
+          {game.status}
+        </span>
+        <div className="ml-auto flex items-center gap-2">
+          <span className="hero-card-code">{game.code}</span>
+          {isCenter && <ShieldCheck className="h-3 w-3 text-emerald-400/40" />}
+        </div>
+      </div>
+
+      <p className="text-[9px] uppercase tracking-[0.16em] text-white/52">{game.name}</p>
+      <h3 className="mt-1 font-heading text-sm sm:text-[15px] font-semibold leading-tight text-white/92">
+        {game.toolTitle}
+      </h3>
+      <p className="mb-5 mt-1 text-[10px] leading-relaxed text-white/55">{game.tagline}</p>
+
+      <div className="mb-5 space-y-1.5">
+        {game.features.map((feat) => (
+          <div key={feat} className="flex items-center gap-2.5 text-[10px] font-medium text-white/70 sm:text-[11px]">
+            <div className="h-px w-2.5 shrink-0 bg-[color:var(--card-accent)] opacity-70" />
+            {feat}
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => handleViewDetails(game.name)}
+        className={`hero-diamond-btn block w-full text-center py-2 text-[10px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 ${
+          isCenter ? "hero-diamond-btn-primary" : "hero-diamond-btn-ghost text-white/90"
+        }`}
+      >
+        View Details
+      </button>
+    </div>
+  );
+
   return (
-    <section className="section-shell relative flex min-h-[100svh] flex-col items-center justify-start overflow-hidden px-4 pt-40 pb-10 sm:pb-12">
+    <section className="section-shell relative flex min-h-[100svh] flex-col items-center justify-start overflow-hidden px-4 pt-32 pb-10 sm:pt-40 sm:pb-12">
       {/* ── Background layers ── */}
       {/* Faint arc rings for mixed-mode background */}
       <div
@@ -178,7 +233,7 @@ const Hero = () => {
       ))}
 
       {/* ── Content ── */}
-      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-12rem)] w-full max-w-5xl flex-col text-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col text-center">
         {/* "Introducing" with flanking lines */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -201,7 +256,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 70, damping: 22, delay: 0.26 }}
             className="pointer-events-none absolute inset-0 select-none whitespace-nowrap font-heading font-bold leading-[0.88] tracking-[-0.03em] text-sky-300/55 blur-[22px]"
-            style={{ fontSize: "clamp(3.5rem, 14vw, 10rem)" }}
+            style={{ fontSize: "clamp(3rem, 13vw, 10rem)" }}
           >
             CheatVault.io
           </motion.span>
@@ -209,9 +264,9 @@ const Hero = () => {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 70, damping: 22, delay: 0.2 }}
-            className="relative z-10 font-heading font-bold leading-[0.88] tracking-[-0.03em]"
+            className="relative z-10 font-heading font-bold leading-[0.88] tracking-[-0.03em] whitespace-nowrap"
             style={{
-              fontSize: "clamp(3.5rem, 14vw, 10rem)",
+              fontSize: "clamp(3rem, 13vw, 10rem)",
               background:
                 "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(230,243,255,0.9) 38%, rgba(161,203,255,0.72) 75%, rgba(108,166,236,0.62) 100%)",
               WebkitBackgroundClip: "text",
@@ -267,7 +322,85 @@ const Hero = () => {
             transition={{ type: "spring", stiffness: 45, damping: 20, delay: 0.75 }}
             className="flex items-center justify-center"
           >
-            <div className="relative flex items-end justify-center" style={{ width: "min(88vw, 820px)" }}>
+            {/* Mobile: swipeable cards (avoid clipped overlaps) */}
+            <div className="w-full sm:hidden -mx-4 overflow-x-auto px-4 pb-2 pt-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max min-w-full snap-x snap-mandatory gap-4 pr-8 touch-pan-x">
+                {games.map((game, i) => {
+                  const isCenter = i === 1;
+                  return (
+                    <motion.div
+                      key={game.name}
+                      initial={{ opacity: 0, y: 26 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ type: "spring" as const, stiffness: 55, damping: 20, delay: 0.9 + i * 0.08 }}
+                      className="snap-center"
+                      style={{ width: "min(86vw, 340px)" }}
+                    >
+                      <div className="w-full" style={{ width: "100%" }}>
+                        {/* Render at full container width on mobile */}
+                        <div
+                          className={`w-full ${isCenter ? "" : ""}`}
+                          style={
+                            {
+                              "--card-accent": game.accent,
+                            } as CSSProperties
+                          }
+                        >
+                          <div
+                            className={`gloss-card hero-feature-card relative ${isCenter ? "shadow-[0_8px_60px_-12px_rgba(88,168,255,0.3)]" : "opacity-90"}`}
+                            style={{ width: "100%", padding: "22px", ["--card-accent" as any]: game.accent }}
+                          >
+                            {/* reuse body but with width 100% */}
+                            <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.16] to-transparent" />
+                            <div className="hero-card-diamond hero-card-diamond-left" />
+                            <div className="hero-card-diamond hero-card-diamond-right" />
+
+                            <div className="mb-4 flex items-center gap-2">
+                              <span className={`h-1.5 w-1.5 rounded-full ${statusColors[game.status].dot}`} />
+                              <span className={`text-[9px] uppercase tracking-[0.18em] font-semibold ${statusColors[game.status].text}`}>
+                                {game.status}
+                              </span>
+                              <div className="ml-auto flex items-center gap-2">
+                                <span className="hero-card-code">{game.code}</span>
+                                {isCenter && <ShieldCheck className="h-3 w-3 text-emerald-400/40" />}
+                              </div>
+                            </div>
+
+                            <p className="text-[9px] uppercase tracking-[0.16em] text-white/52">{game.name}</p>
+                            <h3 className="mt-1 font-heading text-sm font-semibold leading-tight text-white/92">
+                              {game.toolTitle}
+                            </h3>
+                            <p className="mb-5 mt-1 text-[10px] leading-relaxed text-white/55">{game.tagline}</p>
+
+                            <div className="mb-5 space-y-1.5">
+                              {game.features.map((feat) => (
+                                <div key={feat} className="flex items-center gap-2.5 text-[10px] font-medium text-white/70">
+                                  <div className="h-px w-2.5 shrink-0 bg-[color:var(--card-accent)] opacity-70" />
+                                  {feat}
+                                </div>
+                              ))}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => handleViewDetails(game.name)}
+                              className={`hero-diamond-btn block w-full text-center py-2 text-[10px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 ${
+                                isCenter ? "hero-diamond-btn-primary" : "hero-diamond-btn-ghost text-white/90"
+                              }`}
+                            >
+                              View Details
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Desktop/tablet: overlapped card stack */}
+            <div className="relative hidden items-end justify-center sm:flex" style={{ width: "min(88vw, 820px)" }}>
               {games.map((game, i) => {
                 const { rotate, x: xOff, scale, z } = cardTransforms[i];
                 const isCenter = i === 1;
@@ -290,68 +423,7 @@ const Hero = () => {
                       marginLeft: i === 0 ? 0 : "-35px",
                     }}
                   >
-                    <div
-                      className={`gloss-card hero-feature-card relative ${isCenter
-                          ? "shadow-[0_8px_60px_-12px_rgba(88,168,255,0.3)]"
-                          : "opacity-70"
-                        }`}
-                      style={
-                        {
-                          width: "clamp(210px, 22vw, 260px)",
-                          padding: "clamp(18px, 2vw, 28px)",
-                          "--card-accent": game.accent,
-                        } as CSSProperties
-                      }
-                    >
-                      {/* Top accent line */}
-                      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.16] to-transparent" />
-                      <div className="hero-card-diamond hero-card-diamond-left" />
-                      <div className="hero-card-diamond hero-card-diamond-right" />
-
-                      {/* Status — minimal dot + text */}
-                      <div className="mb-4 flex items-center gap-2">
-                        <span className={`h-1.5 w-1.5 rounded-full ${statusColors[game.status].dot}`} />
-                        <span className={`text-[9px] uppercase tracking-[0.18em] font-semibold ${statusColors[game.status].text}`}>
-                          {game.status}
-                        </span>
-                        <div className="ml-auto flex items-center gap-2">
-                          <span className="hero-card-code">{game.code}</span>
-                          {isCenter && <ShieldCheck className="h-3 w-3 text-emerald-400/40" />}
-                        </div>
-                      </div>
-
-                      {/* Game info */}
-                      <p className="text-[9px] uppercase tracking-[0.16em] text-white/52">{game.name}</p>
-                      <h3 className="mt-1 font-heading text-sm sm:text-[15px] font-semibold leading-tight text-white/92">
-                        {game.toolTitle}
-                      </h3>
-                      <p className="mb-5 mt-1 text-[10px] leading-relaxed text-white/55">{game.tagline}</p>
-
-                      {/* Features — cleaner list */}
-                      <div className="mb-5 space-y-1.5">
-                        {game.features.map((feat) => (
-                          <div
-                            key={feat}
-                            className="flex items-center gap-2.5 text-[10px] font-medium text-white/70 sm:text-[11px]"
-                          >
-                            <div className="h-px w-2.5 shrink-0 bg-[color:var(--card-accent)] opacity-70" />
-                            {feat}
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* CTA */}
-                      <button
-                        type="button"
-                        onClick={() => handleViewDetails(game.name)}
-                        className={`hero-diamond-btn block w-full text-center py-2 text-[10px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 ${isCenter
-                            ? "hero-diamond-btn-primary"
-                            : "hero-diamond-btn-ghost text-white/90"
-                          }`}
-                      >
-                        View Details
-                      </button>
-                    </div>
+                    {renderCardBody(game, isCenter)}
                   </motion.div>
                 );
               })}
